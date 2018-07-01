@@ -27,10 +27,9 @@ const FilmDetails = props => {
   } else {
     details = (
       <div className="film-detail">
-        <p>
-          <i className="material-icons">subscriptions</i>
-          <span>No film selected</span>
-        </p>
+        <i className="material-icons">subscriptions</i>
+        &nbsp;&nbsp;
+        <span>No film selected</span>
       </div>
     )
   }
