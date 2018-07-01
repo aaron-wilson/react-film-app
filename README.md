@@ -20,10 +20,19 @@ npm run start
 
 ```bash
 npm run build
+# edit paths in docs/index.html and docs/static/js/main.{HASH}.js to prevent 404 errors
+# src=, href=, logo.svg, service-worker.js
+# test build
+open build/index.html
+
 rm -rf docs
 mv build docs
-# edits paths in docs/index.html and docs/static/js/main.{HASH}.js to prevent 404 errors
 git add
 git commit
 git push
+```
+
+```js
+// module.exports = __webpack_require__.p + "static/media/logo.5d5d9eef.svg";
+module.exports = "static/media/logo.5d5d9eef.svg";
 ```

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,7 +71,7 @@
 
 
 if (true) {
-  module.exports = __webpack_require__(15);
+  module.exports = __webpack_require__(16);
 } else {
   module.exports = require('./cjs/react.development.js');
 }
@@ -181,7 +181,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 "use strict";
 
 
-var asap = __webpack_require__(10);
+var asap = __webpack_require__(11);
 
 function noop() {}
 
@@ -520,6 +520,90 @@ module.exports = emptyFunction;
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {const fs = __webpack_require__(28)
+const path = __webpack_require__(29)
+
+/*
+ * Parses a string or buffer into an object
+ * @param {(string|Buffer)} src - source to be parsed
+ * @returns {Object} keys and values from src
+*/
+function parse (src) {
+  const obj = {}
+
+  // convert Buffers before splitting into lines and processing
+  src.toString().split('\n').forEach(function (line) {
+    // matching "KEY' and 'VAL' in 'KEY=VAL'
+    const keyValueArr = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/)
+    // matched?
+    if (keyValueArr != null) {
+      const key = keyValueArr[1]
+
+      // default undefined or missing values to empty string
+      let value = keyValueArr[2] || ''
+
+      // expand newlines in quoted values
+      const len = value ? value.length : 0
+      if (len > 0 && value.charAt(0) === '"' && value.charAt(len - 1) === '"') {
+        value = value.replace(/\\n/gm, '\n')
+      }
+
+      // remove any surrounding quotes and extra spaces
+      value = value.replace(/(^['"]|['"]$)/g, '').trim()
+
+      obj[key] = value
+    }
+  })
+
+  return obj
+}
+
+/*
+ * Main entry point into dotenv. Allows configuration before loading .env
+ * @param {Object} options - options for parsing .env file
+ * @param {string} [options.path=.env] - path to .env file
+ * @param {string} [options.encoding=utf8] - encoding of .env file
+ * @returns {Object} parsed object or error
+*/
+function config (options) {
+  let dotenvPath = path.resolve(process.cwd(), '.env')
+  let encoding = 'utf8'
+
+  if (options) {
+    if (options.path) {
+      dotenvPath = options.path
+    }
+    if (options.encoding) {
+      encoding = options.encoding
+    }
+  }
+
+  try {
+    // specifying an encoding returns a string instead of a buffer
+    const parsed = parse(fs.readFileSync(dotenvPath, { encoding }))
+
+    Object.keys(parsed).forEach(function (key) {
+      if (!Object({"NODE_ENV":"production","PUBLIC_URL":"","REACT_APP_NODE_ENV":"prod","REACT_APP_TMDB_API_KEY":"65c3211ef9289b84310d59dbe3f5888f"}).hasOwnProperty(key)) {
+        Object({"NODE_ENV":"production","PUBLIC_URL":"","REACT_APP_NODE_ENV":"prod","REACT_APP_TMDB_API_KEY":"65c3211ef9289b84310d59dbe3f5888f"})[key] = parsed[key]
+      }
+    })
+
+    return { parsed }
+  } catch (e) {
+    return { error: e }
+  }
+}
+
+module.exports.config = config
+module.exports.load = config
+module.exports.parse = parse
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -709,15 +793,15 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(8);
-module.exports = __webpack_require__(14);
+__webpack_require__(9);
+module.exports = __webpack_require__(15);
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -735,12 +819,12 @@ if (typeof Promise === 'undefined') {
   // Rejection tracking prevents a common issue where React gets into an
   // inconsistent state due to an error, but it gets swallowed by a Promise,
   // and the user has no idea what causes React's erratic future behavior.
-  __webpack_require__(9).enable();
-  window.Promise = __webpack_require__(12);
+  __webpack_require__(10).enable();
+  window.Promise = __webpack_require__(13);
 }
 
 // fetch() polyfill for making API calls.
-__webpack_require__(13);
+__webpack_require__(14);
 
 // Object.assign() is commonly used with React.
 // It will use the native implementation if it's present and isn't buggy.
@@ -754,7 +838,7 @@ if (false) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -873,7 +957,7 @@ function matchWhitelist(error, list) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1101,10 +1185,10 @@ rawAsap.makeRequestCallFromTimer = makeRequestCallFromTimer;
 // back into ASAP proper.
 // https://github.com/tildeio/rsvp.js/blob/cddf7232546a9cf858524b75cde6f9edf72620a7/lib/rsvp/asap.js
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1131,7 +1215,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1245,7 +1329,7 @@ Promise.prototype['catch'] = function (onRejected) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 (function(self) {
@@ -1712,25 +1796,25 @@ Promise.prototype['catch'] = function (onRejected) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__normalize_css__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__normalize_css__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__normalize_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__normalize_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__index_css__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__index_css__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__index_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__index_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__App__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__App__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__registerServiceWorker__ = __webpack_require__(38);
 __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__App__["a" /* default */],null),document.getElementById('root'));Object(__WEBPACK_IMPORTED_MODULE_5__registerServiceWorker__["a" /* default */])();
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1759,7 +1843,7 @@ assign:k}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default?Z.default:Z;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1797,14 +1881,14 @@ if (true) {
   // DCE check should happen before ReactDOM bundle executes so that
   // DevTools can report bad minification during injection.
   checkDCE();
-  module.exports = __webpack_require__(17);
+  module.exports = __webpack_require__(18);
 } else {
   module.exports = require('./cjs/react-dom.development.js');
 }
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1820,7 +1904,7 @@ if (true) {
 /*
  Modernizr 3.0.0pre (Custom Build) | MIT
 */
-var aa=__webpack_require__(3),ba=__webpack_require__(0),m=__webpack_require__(18),p=__webpack_require__(1),v=__webpack_require__(5),da=__webpack_require__(19),ea=__webpack_require__(20),fa=__webpack_require__(21),ha=__webpack_require__(4);
+var aa=__webpack_require__(3),ba=__webpack_require__(0),m=__webpack_require__(19),p=__webpack_require__(1),v=__webpack_require__(5),da=__webpack_require__(20),ea=__webpack_require__(21),fa=__webpack_require__(22),ha=__webpack_require__(4);
 function A(a){for(var b=arguments.length-1,c="https://reactjs.org/docs/error-decoder.html?invariant="+a,d=0;d<b;d++)c+="&args[]="+encodeURIComponent(arguments[d+1]);aa(!1,"Minified React error #"+a+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",c)}ba?void 0:A("227");
 function ia(a,b,c,d,e,f,g,h,k){this._hasCaughtError=!1;this._caughtError=null;var n=Array.prototype.slice.call(arguments,3);try{b.apply(c,n)}catch(r){this._caughtError=r,this._hasCaughtError=!0}}
 var B={_caughtError:null,_hasCaughtError:!1,_rethrowError:null,_hasRethrowError:!1,invokeGuardedCallback:function(a,b,c,d,e,f,g,h,k){ia.apply(B,arguments)},invokeGuardedCallbackAndCatchFirstError:function(a,b,c,d,e,f,g,h,k){B.invokeGuardedCallback.apply(this,arguments);if(B.hasCaughtError()){var n=B.clearCaughtError();B._hasRethrowError||(B._hasRethrowError=!0,B._rethrowError=n)}},rethrowCaughtError:function(){return ka.apply(B,arguments)},hasCaughtError:function(){return B._hasCaughtError},clearCaughtError:function(){if(B._hasCaughtError){var a=
@@ -2051,7 +2135,7 @@ var Ai={default:vi},Bi=Ai&&vi||Ai;module.exports=Bi.default?Bi.default:Bi;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2090,7 +2174,7 @@ var ExecutionEnvironment = {
 module.exports = ExecutionEnvironment;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2132,7 +2216,7 @@ function getActiveElement(doc) /*?DOMElement*/{
 module.exports = getActiveElement;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2203,7 +2287,7 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2218,7 +2302,7 @@ module.exports = shallowEqual;
  * 
  */
 
-var isTextNode = __webpack_require__(22);
+var isTextNode = __webpack_require__(23);
 
 /*eslint-disable no-bitwise */
 
@@ -2246,7 +2330,7 @@ function containsNode(outerNode, innerNode) {
 module.exports = containsNode;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2261,7 +2345,7 @@ module.exports = containsNode;
  * @typechecks
  */
 
-var isNode = __webpack_require__(23);
+var isNode = __webpack_require__(24);
 
 /**
  * @param {*} object The object to check.
@@ -2274,7 +2358,7 @@ function isTextNode(object) {
 module.exports = isTextNode;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2302,12 +2386,6 @@ function isNode(object) {
 module.exports = isNode;
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 25 */
 /***/ (function(module, exports) {
 
@@ -2315,134 +2393,37 @@ module.exports = isNode;
 
 /***/ }),
 /* 26 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__logo_svg__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__logo_svg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__logo_svg__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__App_css__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__App_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__App_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__TMDB__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Film_FilmListing__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Film_FilmDetails__ = __webpack_require__(37);
-var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var App=function(_Component){_inherits(App,_Component);function App(props){_classCallCheck(this,App);var _this=_possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).call(this,props));_this.handleFaveToggle=_this.handleFaveToggle.bind(_this);_this.handleDetailsClick=_this.handleDetailsClick.bind(_this);_this.state={films:__WEBPACK_IMPORTED_MODULE_3__TMDB__["a" /* default */].films,faves:[],current:null};return _this;}_createClass(App,[{key:'render',value:function render(){return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',null,__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img',{src:__WEBPACK_IMPORTED_MODULE_1__logo_svg___default.a,className:'App-logo',alt:'logo'}),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-library'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('h1',{className:'section-title'},'FILMS'),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Film_FilmListing__["a" /* default */],{films:this.state.films,faves:this.state.faves,apiKey:__WEBPACK_IMPORTED_MODULE_3__TMDB__["a" /* default */].api_key,onFaveToggle:this.handleFaveToggle,onDetailsClick:this.handleDetailsClick})),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-details'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('h1',{className:'section-title'},'DETAILS'),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__Film_FilmDetails__["a" /* default */],{film:this.state.current}))));}},{key:'handleFaveToggle',value:function handleFaveToggle(film){var faves=this.state.faves.slice();var filmIndex=faves.indexOf(film);if(filmIndex>-1){console.log('removing',film.title,'from faves');// remove 1 item at index filmIndex
-faves.splice(filmIndex,1);}else{console.log('adding',film.title,'to faves');faves.push(film);}this.setState({faves:faves});}},{key:'handleDetailsClick',value:function handleDetailsClick(film){var _this2=this;console.log('fetching details for',film);var url='https://api.themoviedb.org/3/movie/'+film.id+'?api_key='+__WEBPACK_IMPORTED_MODULE_3__TMDB__["a" /* default */].api_key+'&append_to_response=videos,images&language=en';console.log('url',url);fetch(url).then(function(response){response.json().then(function(data){console.log(data);_this2.setState({current:data});});});}}]);return App;}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);/* harmony default export */ __webpack_exports__["a"] = (App);
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = "static/media/logo.5d5d9eef.svg";
-
-/***/ }),
-/* 28 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dotenv__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dotenv___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_dotenv__);
-__WEBPACK_IMPORTED_MODULE_0_dotenv___default.a.config();var TMDB={api_key:"65c3211ef9289b84310d59dbe3f5888f",films:[{"id":346364,"title":"It","poster_path":"/9E2y5Q7WlCVNEhP5GiVTjhEhx1o.jpg","backdrop_path":"/tcheoA2nPATCm2vvXw2hVQoaEFD.jpg","overview":"In a small town in Maine, seven children known as The Losers Club come face to face with life problems, bullies and a monster that takes the shape of a clown called Pennywise.","release_date":"2017-09-05"},{"id":343668,"title":"Kingsman: The Golden Circle","poster_path":"/pKESfn2Pdy0b7drvZHQb7UzgqoY.jpg","backdrop_path":"/uExPmkOHJySrbJyJDJylHDqaT58.jpg","overview":"When an attack on the Kingsman headquarters takes place and a new villain rises, Eggsy and Merlin are forced to work together with the American agency known as the Statesman to save the world.","release_date":"2017-09-20"},{"id":339403,"title":"Baby Driver","poster_path":"/dN9LbVNNZFITwfaRjl4tmwGWkRg.jpg","backdrop_path":"/goCvLSUFz0p7k8R10Hv4CVh3EQv.jpg","overview":"After being coerced into working for a crime boss, a young getaway driver finds himself taking part in a heist doomed to fail.","release_date":"2017-06-28"},{"id":335984,"title":"Blade Runner 2049","poster_path":"/cbRQVCia0urtv5UGsVFTdqLDIRv.jpg","backdrop_path":"/zfWPeRgYpRjPZLGwwkfnTfaFnNh.jpg","overview":"Thirty years after the events of the first film, a new blade runner, LAPD Officer K, unearths a long-buried secret that has the potential to plunge what's left of society into chaos. K's discovery leads him on a quest to find Rick Deckard, a former LAPD blade runner who has been missing for 30 years.","release_date":"2017-10-04"},{"id":381283,"title":"mother!","poster_path":"/qmi2dsuoyzZdJ0WFZYQazbX8ILj.jpg","backdrop_path":"/uuQpQ8VDOtVL2IO4y2pR58odkS5.jpg","overview":"A couple's relationship is tested when uninvited guests arrive at their home, disrupting their tranquil existence.","release_date":"2017-09-13"},{"id":374720,"title":"Dunkirk","poster_path":"/bOXBV303Fgkzn2K4FeKDc0O31q4.jpg","backdrop_path":"/fudEG1VUWuOqleXv6NwCExK0VLy.jpg","overview":"The miraculous evacuation of Allied soldiers from Belgium, Britain, Canada and France, who were cut off and surrounded by the German army from the beaches and harbor of Dunkirk, France, between May 26th and June 4th 1940, during the Battle of France in World War II.","release_date":"2017-07-19"},{"id":415842,"title":"American Assassin","poster_path":"/o40BAqdTQHiN3cUfpgieDUYI71z.jpg","backdrop_path":"/puKZWmBIpuEMwGCn2hZkublG1rO.jpg","overview":"Following the murder of his fiancée, Mitch Rapp trains under the instruction of Cold War veteran Stan Hurley. The pair then is enlisted to investigate a wave of apparently random attacks on military and civilian targets.","release_date":"2017-09-14"},{"id":390043,"title":"The Hitman's Bodyguard","poster_path":"/5CGjlz2vyBhW5xHW4eNOZIdgzYq.jpg","backdrop_path":"/7KsqfXDECZMryX1Rv4RKsT7SIjQ.jpg","overview":"The world's top bodyguard gets a new client, a hit man who must testify at the International Court of Justice. They must put their differences aside and work together to make it to the trial on time.","release_date":"2017-08-16"},{"id":316154,"title":"The Bad Batch","poster_path":"/7o14VaMphEIzPwzeW6FP3A6zb4W.jpg","backdrop_path":"/aQ06MnEDLh9X3ZOtY21UD2XB197.jpg","overview":"In a desert wasteland in Texas, a muscled cannibal breaks one important rule: don’t play with your food.","release_date":"2017-06-23"}]};/* harmony default export */ __webpack_exports__["a"] = (TMDB);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_dotenv__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_dotenv___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_dotenv__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logo_svg__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__logo_svg___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__logo_svg__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__App_css__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__App_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__App_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__TMDB__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Film_FilmListing__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Film_FilmDetails__ = __webpack_require__(37);
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}__WEBPACK_IMPORTED_MODULE_1_dotenv___default.a.config();var App=function(_Component){_inherits(App,_Component);function App(props){_classCallCheck(this,App);var _this=_possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).call(this,props));_this.handleFaveToggle=_this.handleFaveToggle.bind(_this);_this.handleDetailsClick=_this.handleDetailsClick.bind(_this);_this.env="prod";_this.state={films:__WEBPACK_IMPORTED_MODULE_4__TMDB__["a" /* default */].films,faves:[],current:null};return _this;}_createClass(App,[{key:'render',value:function render(){return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',null,__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img',{src:__WEBPACK_IMPORTED_MODULE_2__logo_svg___default.a,className:'App-logo',alt:'logo'}),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-library'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('h1',{className:'section-title'},'FILMS'),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__Film_FilmListing__["a" /* default */],{films:this.state.films,faves:this.state.faves,env:this.env,onFaveToggle:this.handleFaveToggle,onDetailsClick:this.handleDetailsClick})),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-details'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('h1',{className:'section-title'},'DETAILS'),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__Film_FilmDetails__["a" /* default */],{film:this.state.current}))));}},{key:'handleFaveToggle',value:function handleFaveToggle(film){var faves=this.state.faves.slice();var filmIndex=faves.indexOf(film);if(filmIndex>-1){if(this.env==='dev')console.log('removing',film.title,'from faves');// remove 1 item at index filmIndex
+faves.splice(filmIndex,1);}else{if(this.env==='dev')console.log('adding',film.title,'to faves');faves.push(film);}this.setState({faves:faves});}},{key:'handleDetailsClick',value:function handleDetailsClick(film){var _this2=this;if(this.env==='dev')console.log('fetching details for',film);var url='https://api.themoviedb.org/3/movie/'+film.id+'?api_key='+__WEBPACK_IMPORTED_MODULE_4__TMDB__["a" /* default */].api_key+'&append_to_response=videos,images&language=en';if(this.env==='dev')console.log('url',url);fetch(url).then(function(response){response.json().then(function(data){if(_this2.env==='dev')console.log(data);_this2.setState({current:data});});});}}]);return App;}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);/* harmony default export */ __webpack_exports__["a"] = (App);
 
 /***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(process) {const fs = __webpack_require__(31)
-const path = __webpack_require__(32)
-
-/*
- * Parses a string or buffer into an object
- * @param {(string|Buffer)} src - source to be parsed
- * @returns {Object} keys and values from src
-*/
-function parse (src) {
-  const obj = {}
-
-  // convert Buffers before splitting into lines and processing
-  src.toString().split('\n').forEach(function (line) {
-    // matching "KEY' and 'VAL' in 'KEY=VAL'
-    const keyValueArr = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/)
-    // matched?
-    if (keyValueArr != null) {
-      const key = keyValueArr[1]
-
-      // default undefined or missing values to empty string
-      let value = keyValueArr[2] || ''
-
-      // expand newlines in quoted values
-      const len = value ? value.length : 0
-      if (len > 0 && value.charAt(0) === '"' && value.charAt(len - 1) === '"') {
-        value = value.replace(/\\n/gm, '\n')
-      }
-
-      // remove any surrounding quotes and extra spaces
-      value = value.replace(/(^['"]|['"]$)/g, '').trim()
-
-      obj[key] = value
-    }
-  })
-
-  return obj
-}
-
-/*
- * Main entry point into dotenv. Allows configuration before loading .env
- * @param {Object} options - options for parsing .env file
- * @param {string} [options.path=.env] - path to .env file
- * @param {string} [options.encoding=utf8] - encoding of .env file
- * @returns {Object} parsed object or error
-*/
-function config (options) {
-  let dotenvPath = path.resolve(process.cwd(), '.env')
-  let encoding = 'utf8'
-
-  if (options) {
-    if (options.path) {
-      dotenvPath = options.path
-    }
-    if (options.encoding) {
-      encoding = options.encoding
-    }
-  }
-
-  try {
-    // specifying an encoding returns a string instead of a buffer
-    const parsed = parse(fs.readFileSync(dotenvPath, { encoding }))
-
-    Object.keys(parsed).forEach(function (key) {
-      if (!Object({"NODE_ENV":"production","PUBLIC_URL":"","REACT_APP_TMDB_API_KEY":"65c3211ef9289b84310d59dbe3f5888f"}).hasOwnProperty(key)) {
-        Object({"NODE_ENV":"production","PUBLIC_URL":"","REACT_APP_TMDB_API_KEY":"65c3211ef9289b84310d59dbe3f5888f"})[key] = parsed[key]
-      }
-    })
-
-    return { parsed }
-  } catch (e) {
-    return { error: e }
-  }
-}
-
-module.exports.config = config
-module.exports.load = config
-module.exports.parse = parse
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
-
-/***/ }),
-/* 31 */
+/* 28 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 32 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -2670,7 +2651,28 @@ var substr = 'ab'.substr(-1) === 'b'
     }
 ;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = "static/media/logo.5d5d9eef.svg";
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 32 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dotenv__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dotenv___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_dotenv__);
+__WEBPACK_IMPORTED_MODULE_0_dotenv___default.a.config();var TMDB={api_key:"65c3211ef9289b84310d59dbe3f5888f",films:[{"id":346364,"title":"It","poster_path":"/9E2y5Q7WlCVNEhP5GiVTjhEhx1o.jpg","backdrop_path":"/tcheoA2nPATCm2vvXw2hVQoaEFD.jpg","overview":"In a small town in Maine, seven children known as The Losers Club come face to face with life problems, bullies and a monster that takes the shape of a clown called Pennywise.","release_date":"2017-09-05"},{"id":343668,"title":"Kingsman: The Golden Circle","poster_path":"/pKESfn2Pdy0b7drvZHQb7UzgqoY.jpg","backdrop_path":"/uExPmkOHJySrbJyJDJylHDqaT58.jpg","overview":"When an attack on the Kingsman headquarters takes place and a new villain rises, Eggsy and Merlin are forced to work together with the American agency known as the Statesman to save the world.","release_date":"2017-09-20"},{"id":339403,"title":"Baby Driver","poster_path":"/dN9LbVNNZFITwfaRjl4tmwGWkRg.jpg","backdrop_path":"/goCvLSUFz0p7k8R10Hv4CVh3EQv.jpg","overview":"After being coerced into working for a crime boss, a young getaway driver finds himself taking part in a heist doomed to fail.","release_date":"2017-06-28"},{"id":335984,"title":"Blade Runner 2049","poster_path":"/cbRQVCia0urtv5UGsVFTdqLDIRv.jpg","backdrop_path":"/zfWPeRgYpRjPZLGwwkfnTfaFnNh.jpg","overview":"Thirty years after the events of the first film, a new blade runner, LAPD Officer K, unearths a long-buried secret that has the potential to plunge what's left of society into chaos. K's discovery leads him on a quest to find Rick Deckard, a former LAPD blade runner who has been missing for 30 years.","release_date":"2017-10-04"},{"id":381283,"title":"mother!","poster_path":"/qmi2dsuoyzZdJ0WFZYQazbX8ILj.jpg","backdrop_path":"/uuQpQ8VDOtVL2IO4y2pR58odkS5.jpg","overview":"A couple's relationship is tested when uninvited guests arrive at their home, disrupting their tranquil existence.","release_date":"2017-09-13"},{"id":374720,"title":"Dunkirk","poster_path":"/bOXBV303Fgkzn2K4FeKDc0O31q4.jpg","backdrop_path":"/fudEG1VUWuOqleXv6NwCExK0VLy.jpg","overview":"The miraculous evacuation of Allied soldiers from Belgium, Britain, Canada and France, who were cut off and surrounded by the German army from the beaches and harbor of Dunkirk, France, between May 26th and June 4th 1940, during the Battle of France in World War II.","release_date":"2017-07-19"},{"id":415842,"title":"American Assassin","poster_path":"/o40BAqdTQHiN3cUfpgieDUYI71z.jpg","backdrop_path":"/puKZWmBIpuEMwGCn2hZkublG1rO.jpg","overview":"Following the murder of his fiancée, Mitch Rapp trains under the instruction of Cold War veteran Stan Hurley. The pair then is enlisted to investigate a wave of apparently random attacks on military and civilian targets.","release_date":"2017-09-14"},{"id":390043,"title":"The Hitman's Bodyguard","poster_path":"/5CGjlz2vyBhW5xHW4eNOZIdgzYq.jpg","backdrop_path":"/7KsqfXDECZMryX1Rv4RKsT7SIjQ.jpg","overview":"The world's top bodyguard gets a new client, a hit man who must testify at the International Court of Justice. They must put their differences aside and work together to make it to the trial on time.","release_date":"2017-08-16"},{"id":316154,"title":"The Bad Batch","poster_path":"/7o14VaMphEIzPwzeW6FP3A6zb4W.jpg","backdrop_path":"/aQ06MnEDLh9X3ZOtY21UD2XB197.jpg","overview":"In a desert wasteland in Texas, a muscled cannibal breaks one important rule: don’t play with your food.","release_date":"2017-06-23"}]};/* harmony default export */ __webpack_exports__["a"] = (TMDB);
 
 /***/ }),
 /* 33 */
@@ -2680,17 +2682,17 @@ var substr = 'ab'.substr(-1) === 'b'
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FilmRow__ = __webpack_require__(34);
-var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var FilmListing=function(_Component){_inherits(FilmListing,_Component);function FilmListing(props){_classCallCheck(this,FilmListing);var _this=_possibleConstructorReturn(this,(FilmListing.__proto__||Object.getPrototypeOf(FilmListing)).call(this,props));_this.handleFilterClick=_this.handleFilterClick.bind(_this);_this.state={filter:'all'};return _this;}_createClass(FilmListing,[{key:'render',value:function render(){var _this2=this;var films=this.state.filter==='faves'?this.props.faves:this.props.films;var allFilms=films.map(function(film){var isFave=_this2.props.faves.includes(film)?true:false;return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__FilmRow__["a" /* default */],{film:film,key:film.id,isFave:isFave,onDetailsClick:_this2.props.onDetailsClick.bind(null,film),onFaveToggle:function onFaveToggle(){return _this2.props.onFaveToggle(film);}});/* onDetailsClick={() => this.props.onDetailsClick.bind(null, film)}
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var FilmListing=function(_Component){_inherits(FilmListing,_Component);function FilmListing(props){_classCallCheck(this,FilmListing);var _this=_possibleConstructorReturn(this,(FilmListing.__proto__||Object.getPrototypeOf(FilmListing)).call(this,props));_this.handleFilterClick=_this.handleFilterClick.bind(_this);_this.state={filter:'all'};return _this;}_createClass(FilmListing,[{key:'render',value:function render(){var _this2=this;var films=this.state.filter==='faves'?this.props.faves:this.props.films;var allFilms=films.map(function(film){var isFave=_this2.props.faves.includes(film)?true:false;return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__FilmRow__["a" /* default */],{film:film,key:film.id,isFave:isFave,env:_this2.props.env,onDetailsClick:_this2.props.onDetailsClick.bind(null,film),onFaveToggle:function onFaveToggle(){return _this2.props.onFaveToggle(film);}});/* onDetailsClick={() => this.props.onDetailsClick.bind(null, film)}
 
-         Explanation: pass a prop called onDetailsClick to FilmRow with an
-         anonymous function that holds a function called
-         handleDetailsClick(film). The anonymous function is the return value
-         from the bind() function. In the scope of handleDetailsClick(),
-         because of bind(thisArg[, arg1, ...]), `this` will NOT be overwritten
-         since `null` was passed. However, `this` is never used in
-         handleDetailsClick(). Film is passed to handleDetailsClick() as the
-         first argument. If you call bind with only 1 argument, you are only
-         changing the `this` reference. */});return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',null,__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list-filters'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list-filter '+(this.state.filter==='all'?'is-active':''),onClick:function onClick(e){return _this2.handleFilterClick('all');}},'ALL',__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span',{className:'section-count'},this.props.films.length)),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list-filter '+(this.state.filter==='faves'?'is-active':''),onClick:function onClick(e){return _this2.handleFilterClick('faves');}},'FAVES',__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span',{className:'section-count'},this.props.faves.length))),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-rows'},allFilms));}},{key:'handleFilterClick',value:function handleFilterClick(str){console.log('setting filter to',str);this.setState({filter:str});}}]);return FilmListing;}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);/* harmony default export */ __webpack_exports__["a"] = (FilmListing);
+      Explanation: pass a prop called onDetailsClick to FilmRow with an
+      anonymous function that holds a function called
+      handleDetailsClick(film). The anonymous function is the return value
+      from the bind() function. In the scope of handleDetailsClick(),
+      because of bind(thisArg[, arg1, ...]), `this` will NOT be overwritten
+      since `null` was passed. However, `this` is never used in
+      handleDetailsClick(). Film is passed to handleDetailsClick() as the
+      first argument. If you call bind with only 1 argument, you are only
+      changing the `this` reference. */});return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',null,__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list-filters'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list-filter '+(this.state.filter==='all'?'is-active':''),onClick:function onClick(e){return _this2.handleFilterClick('all');}},'ALL',__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span',{className:'section-count'},this.props.films.length)),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-list-filter '+(this.state.filter==='faves'?'is-active':''),onClick:function onClick(e){return _this2.handleFilterClick('faves');}},'FAVES',__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span',{className:'section-count'},this.props.faves.length))),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-rows'},allFilms));}},{key:'handleFilterClick',value:function handleFilterClick(str){if(this.props.env==='dev')console.log('setting filter to',str);this.setState({filter:str});}}]);return FilmListing;}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);/* harmony default export */ __webpack_exports__["a"] = (FilmListing);
 
 /***/ }),
 /* 34 */
@@ -2701,7 +2703,7 @@ var _createClass=function(){function defineProperties(target,props){for(var i=0;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FilmPoster__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Fave__ = __webpack_require__(36);
-var FilmRow=function FilmRow(props){return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-row',onClick:props.onDetailsClick},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__FilmPoster__["a" /* default */],{film:props.film}),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-summary'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-summary-text'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('h1',null,props.film.title),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('p',null,new Date(props.film.release_date).getFullYear())),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Fave__["a" /* default */],{isFave:props.isFave,onFaveToggle:props.onFaveToggle})));};/* harmony default export */ __webpack_exports__["a"] = (FilmRow);
+var FilmRow=function FilmRow(props){return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-row',onClick:props.onDetailsClick},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__FilmPoster__["a" /* default */],{film:props.film}),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-summary'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-summary-text'},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('h1',null,props.film.title),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('p',null,new Date(props.film.release_date).getFullYear())),__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Fave__["a" /* default */],{isFave:props.isFave,env:props.env,onFaveToggle:props.onFaveToggle})));};/* harmony default export */ __webpack_exports__["a"] = (FilmRow);
 
 /***/ }),
 /* 35 */
@@ -2719,7 +2721,7 @@ var FilmPoster=function FilmPoster(props){return __WEBPACK_IMPORTED_MODULE_0_rea
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var Fave=function(_Component){_inherits(Fave,_Component);function Fave(props){_classCallCheck(this,Fave);var _this=_possibleConstructorReturn(this,(Fave.__proto__||Object.getPrototypeOf(Fave)).call(this,props));_this.handleClick=_this.handleClick.bind(_this);_this.state={};return _this;}_createClass(Fave,[{key:'render',value:function render(){var _this2=this;var isFave=this.props.isFave?'remove_from_queue':'add_to_queue';return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-row-fave '+isFave,onClick:function onClick(e){return _this2.handleClick(e);}},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span',{className:'material-icons'},isFave));}},{key:'handleClick',value:function handleClick(e){e.stopPropagation();console.log('handling Fave click');this.props.onFaveToggle();}}]);return Fave;}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);/* harmony default export */ __webpack_exports__["a"] = (Fave);
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var Fave=function(_Component){_inherits(Fave,_Component);function Fave(props){_classCallCheck(this,Fave);var _this=_possibleConstructorReturn(this,(Fave.__proto__||Object.getPrototypeOf(Fave)).call(this,props));_this.handleClick=_this.handleClick.bind(_this);_this.state={};return _this;}_createClass(Fave,[{key:'render',value:function render(){var _this2=this;var isFave=this.props.isFave?'remove_from_queue':'add_to_queue';return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div',{className:'film-row-fave '+isFave,onClick:function onClick(e){return _this2.handleClick(e);}},__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span',{className:'material-icons'},isFave));}},{key:'handleClick',value:function handleClick(e){e.stopPropagation();if(this.props.env==='dev')console.log('handling Fave click');this.props.onFaveToggle();}}]);return Fave;}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);/* harmony default export */ __webpack_exports__["a"] = (Fave);
 
 /***/ }),
 /* 37 */
@@ -2769,4 +2771,4 @@ registerValidSW(swUrl);}}).catch(function(){console.log('No internet connection 
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=main.5539ddef.js.map
+//# sourceMappingURL=main.df817416.js.map

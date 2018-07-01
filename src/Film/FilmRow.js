@@ -11,7 +11,9 @@ const FilmRow = props => (
       	<h1>{ props.film.title }</h1>
       	<p>{ (new Date(props.film.release_date)).getFullYear() }</p>
       </div>
-      <Fave isFave={props.isFave} onFaveToggle={props.onFaveToggle} />
+      <Fave isFave={props.isFave}
+            env={props.env}
+            onFaveToggle={props.onFaveToggle} />
     </div>
   </div>
 )

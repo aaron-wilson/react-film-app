@@ -21,21 +21,22 @@ class FilmListing extends Component {
         <FilmRow film={film}
                  key={film.id}
                  isFave={isFave}
+                 env={this.props.env}
                  onDetailsClick={this.props.onDetailsClick.bind(null, film)}
                  onFaveToggle={() => this.props.onFaveToggle(film)} />
       )
 
       /* onDetailsClick={() => this.props.onDetailsClick.bind(null, film)}
 
-         Explanation: pass a prop called onDetailsClick to FilmRow with an
-         anonymous function that holds a function called
-         handleDetailsClick(film). The anonymous function is the return value
-         from the bind() function. In the scope of handleDetailsClick(),
-         because of bind(thisArg[, arg1, ...]), `this` will NOT be overwritten
-         since `null` was passed. However, `this` is never used in
-         handleDetailsClick(). Film is passed to handleDetailsClick() as the
-         first argument. If you call bind with only 1 argument, you are only
-         changing the `this` reference. */
+      Explanation: pass a prop called onDetailsClick to FilmRow with an
+      anonymous function that holds a function called
+      handleDetailsClick(film). The anonymous function is the return value
+      from the bind() function. In the scope of handleDetailsClick(),
+      because of bind(thisArg[, arg1, ...]), `this` will NOT be overwritten
+      since `null` was passed. However, `this` is never used in
+      handleDetailsClick(). Film is passed to handleDetailsClick() as the
+      first argument. If you call bind with only 1 argument, you are only
+      changing the `this` reference. */
     })
 
     return (
@@ -61,7 +62,7 @@ class FilmListing extends Component {
   }
 
   handleFilterClick(str) {
-    console.log('setting filter to', str)
+    if (this.props.env === 'dev') console.log('setting filter to', str)
     this.setState({ filter: str })
   }
 }

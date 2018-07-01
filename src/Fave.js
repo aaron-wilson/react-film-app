@@ -19,7 +19,7 @@ class Fave extends Component {
 
   handleClick(e) {
     e.stopPropagation()
-    console.log('handling Fave click')
+    if (this.props.env === 'dev') console.log('handling Fave click')
     this.props.onFaveToggle()
   }
 }
