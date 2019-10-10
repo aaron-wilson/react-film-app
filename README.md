@@ -20,7 +20,7 @@ npm run start
 
 ```bash
 npm run build
-# edit paths in docs/index.html and docs/static/js/main.{HASH}.js to prevent 404 errors
+# edit paths in build/index.html and build/static/js/main.{HASH}.js to prevent 404 errors
 # src=, href=, logo.svg, service-worker.js
 # test build
 open build/index.html
